@@ -4,7 +4,9 @@
 """Configuration of the BOP Toolkit."""
 
 import os
+from pathlib import Path
 
+root_path = Path(__file__).parent.parent.parent
 
 ######## Basic ########
 
@@ -12,13 +14,13 @@ import os
 if "BOP_PATH" in os.environ:
     datasets_path = os.environ["BOP_PATH"]
 else:
-    datasets_path = r"/path/to/bop/datasets"
+    datasets_path = str(root_path / "dataset")
 
 # Folder with pose results to be evaluated.
 results_path = r"/path/to/folder/with/results"
 
 # Folder for the calculated pose errors and performance scores.
-eval_path = r"/path/to/eval/folder"
+eval_path = str(root_path / "eval/instance/eval_output")
 
 ######## Extended ########
 

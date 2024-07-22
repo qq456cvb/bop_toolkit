@@ -8,6 +8,7 @@ import multiprocessing
 import shutil
 from bop_toolkit_lib import inout, misc
 from bop_toolkit_lib.pose_error import POSE_ERROR_VSD_ARGS
+from pathlib import Path
 
 
 class BatchRenderer:
@@ -96,7 +97,7 @@ class BatchRenderer:
         for worker_id in range(num_workers_used):
             cmd = [
                 "python",
-                "bop_toolkit_lib/call_vsd_worker.py",
+                str(Path(__file__).parent / "call_vsd_worker.py"),
                 f"--input_dir={self.tmp_dir}",
                 f"--worker_id={worker_id}",
             ]

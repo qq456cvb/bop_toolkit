@@ -39,6 +39,7 @@ p = {
                 "tyol": 15,
                 "ycbv": 15,
                 "hope": 15,
+                "pace": 15,
             },
             "vsd_taus": list(np.arange(0.05, 0.51, 0.05)),
             "vsd_normalized_by_diameter": True,
@@ -76,7 +77,7 @@ p = {
     "eval_path": config.eval_path,
     # File with a list of estimation targets to consider. The file is assumed to
     # be stored in the dataset folder.
-    "targets_filename": "test_targets_bop19.json",
+    "targets_filename": "test_targets_bop19_000215.json",
     "num_workers": config.num_workers,  # Number of parallel workers for the calculation of errors.
 }
 ################################################################################

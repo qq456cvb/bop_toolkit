@@ -7,7 +7,7 @@ import math
 import glob
 import os
 from os.path import join
-
+from pathlib import Path
 from bop_toolkit_lib import inout
 
 
@@ -86,6 +86,7 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
         "hb": list(range(1, 34)),  # Full HB dataset.
         "ycbv": list(range(1, 22)),
         "hope": list(range(1, 29)),
+        "pace": list(map(lambda l: int(l.split('_')[-1]), open(Path(__file__).parent.parent.parent / 'model_splits/instance/test.txt').read().splitlines())),
     }[dataset_name]
 
     # ID's of objects with ambiguous views evaluated using the ADI pose error
@@ -103,6 +104,7 @@ def get_model_params(datasets_path, dataset_name, model_type=None):
         "hbs": [10, 12, 18, 29],
         "hb": [6, 10, 11, 12, 13, 14, 18, 24, 29],
         "ycbv": [1, 13, 14, 16, 18, 19, 20, 21],
+        "pace": None,
         "hope": None,  # Not defined yet.
     }[dataset_name]
 
@@ -357,13 +359,33 @@ def get_split_params(datasets_path, dataset_name, split, split_type=None):
             p["depth_range"] = None  # Not calculated yet.
             p["azimuth_range"] = None  # Not calculated yet.
             p["elev_range"] = None  # Not calculated yet.
-
+            
+    elif dataset_name == 'pace':
+        p['scene_ids'] = {
+            'train': {
+                'pbr_cat': list(range(0, 50)),
+                'pbr_inst': list(range(0, 50)),
+            },
+            'val': {
+                'inst': list(range(90, 120)) + list(range(270, 300)),
+                'pbr_cat': list(range(0, 10)),
+            },
+            'test': {
+                None: list(range(0, 90)) + list(range(120, 270))
+            }
+        }[split][split_type]
+        p['im_size'] = (1280, 720)
+        
+        if split == 'test':
+            p['depth_range'] = None  # Not calculated yet.
+            p['azimuth_range'] = None  # Not calculated yet.
+            p['elev_range'] = None  # Not calculated yet.
     else:
         raise ValueError("Unknown BOP dataset ({}).".format(dataset_name))
 
     base_path = join(datasets_path, dataset_name)
     split_path = join(base_path, split)
-    if split_type is not None:
+    if split_type is not None and dataset_name != 'pace':
         if split_type == "pbr":
             p["scene_ids"] = list(range(50))
         split_path += "_" + split_type
